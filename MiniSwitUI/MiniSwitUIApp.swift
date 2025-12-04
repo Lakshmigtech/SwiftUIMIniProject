@@ -9,9 +9,27 @@ import SwiftUI
 
 @main
 struct MiniSwitUIApp: App {
+    
+    init() {
+        let appearance = UITabBarAppearance()
+        appearance.configureWithOpaqueBackground()
+        appearance.backgroundColor = UIColor.systemBackground
+
+        UITabBar.appearance().scrollEdgeAppearance = appearance
+        UITabBar.appearance().standardAppearance = appearance
+    }
+    @StateObject var cartVM = CartViewModel()
+    @StateObject var productVM = ProductViewModel()
+    @StateObject var authVM = AuthViewModel()
+
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            MainTabView()
+                .environmentObject(cartVM)
+                .environmentObject(productVM)
+                .environmentObject(authVM)
         }
     }
 }
+
+

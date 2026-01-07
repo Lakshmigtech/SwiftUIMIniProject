@@ -15,3 +15,7 @@ struct Product: Identifiable, Codable {
     let image: String
     let category: String
 }
+struct Rating: Codable {
+    let count: Int
+    let rate: Double
+}

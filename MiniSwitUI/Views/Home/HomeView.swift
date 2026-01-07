@@ -146,7 +146,6 @@ struct CategoryDestinationView: View {
         }
         .navigationTitle(type.title)
         .navigationBarTitleDisplayMode(.inline)
-        .toolbar(.hidden, for: .navigationBar)
         .task {
             await productVM.fetchProductsByCategory(type.apiCategory)
         }

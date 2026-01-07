@@ -5,11 +5,10 @@
 //  Created by Techversant on 24/12/25.
 //
 
+
 import SwiftUI
 
-struct HomeView: View {
-    
-    
+struct FlipkartProductRow: View {
     let product: Product
 
     var body: some View {
@@ -34,7 +33,7 @@ struct HomeView: View {
                     .font(.subheadline)
                     .lineLimit(2)
 
-                // ⭐ Rating
+                // ⭐ Rating (mocked like Flipkart)
                 HStack(spacing: 4) {
                     Text("4.3 ★")
                         .font(.caption)
@@ -49,7 +48,7 @@ struct HomeView: View {
                         .foregroundColor(.gray)
                 }
 
-                // PRICE
+                // PRICE ROW
                 HStack(spacing: 6) {
                     Text("₹\(Int(product.price * 80))")
                         .font(.headline)
@@ -72,34 +71,58 @@ struct HomeView: View {
 
             Spacer()
         }
-        .padding(8)
+        .padding(.vertical, 6)
+        
     }
 }
-struct ProductListNewView: View {
-    @StateObject private var viewModel = ProductViewModel()
+
+
+struct ProductNewListView: View {
+    @EnvironmentObject var viewModel: ProductViewModel
+    @EnvironmentObject var cartVM: CartViewModel
 
     var body: some View {
         NavigationStack {
             Group {
                 if viewModel.isLoading {
                     ProgressView("Loading products...")
+                        .font(.title2)
+
+                } else if let error = viewModel.errorMessage {
+                    Text(error)
+                        .foregroundColor(.red)
+                        .padding()
+
                 } else {
-                    ScrollView {
-                        LazyVStack(spacing: 8) {
-                            ForEach(viewModel.products) { product in
-                                NavigationLink(destination: ProductDetailNewView(product: product)) {
-                                    HomeView(product: product)
-                                        .background(Color.white)
-                                }
-                                Divider()
-                            }
+                    List(viewModel.products) { product in
+                        NavigationLink(destination: ProductDetailView(product: product)) {
+                            FlipkartProductRow(product: product)
+                        }
+                    }
+                    .listStyle(.plain)
+                }
+            }
+            .navigationTitle("ShopEasy 🛒")
+            .task {
+                await viewModel.fetchProducts()
+            }
+            .toolbar {
+                NavigationLink(destination: CartView()) {
+                    ZStack(alignment: .topTrailing) {
+                        Image(systemName: "cart")
+                            .font(.title3)
+
+                        if cartVM.items.count > 0 {
+                            Text("\(cartVM.items.count)")
+                                .font(.caption2)
+                                .foregroundColor(.white)
+                                .padding(4)
+                                .background(Color.red)
+                                .clipShape(Circle())
+                                .offset(x: 10, y: -10)
                         }
                     }
                 }
-            }
-            .navigationTitle(" Style")
-            .task {
-                await viewModel.fetchProducts()
             }
         }
     }

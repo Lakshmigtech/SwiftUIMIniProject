@@ -138,14 +138,6 @@ struct LoginView: View {
     }
 }
 
-struct SignupView: View {
-    var body: some View {
-        Text("Signup Screen Placeholder")
-            .font(.title)
-            .foregroundColor(.gray)
-    }
-}
-
 #Preview {
     LoginView()
 }

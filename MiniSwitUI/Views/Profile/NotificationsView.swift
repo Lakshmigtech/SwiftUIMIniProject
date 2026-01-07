@@ -5,6 +5,51 @@
 //  Created by Techversant on 22/12/25.
 //
 
+
+import SwiftUI
+
+struct NotificationRow: View {
+    let notification: AppNotification
+
+    var body: some View {
+        HStack(alignment: .top, spacing: 12) {
+
+            Image(systemName: notification.type.icon)
+                .foregroundColor(notification.type.color)
+                .font(.title3)
+                .padding(8)
+                .background(notification.type.color.opacity(0.1))
+                .cornerRadius(10)
+
+            VStack(alignment: .leading, spacing: 4) {
+                Text(notification.title)
+                    .font(.headline)
+                    .foregroundColor(.primary)
+
+                Text(notification.message)
+                    .font(.subheadline)
+                    .foregroundColor(.secondary)
+                    .lineLimit(2)
+
+                Text(notification.time)
+                    .font(.caption)
+                    .foregroundColor(.gray)
+            }
+
+            Spacer()
+
+            if !notification.isRead {
+                Circle()
+                    .fill(Color.blue)
+                    .frame(width: 8, height: 8)
+            }
+        }
+        .padding(.vertical, 8)
+    }
+}
+
+
+
 struct NotificationsView: View {
 
     @State private var notifications: [AppNotification] = [
